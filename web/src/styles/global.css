@@ -1,0 +1,38 @@
+:root {
+  --bg: #0b1020;
+  --bg-elev: #12182b;
+  --bg-soft: #1a2238;
+  --line: rgba(255, 255, 255, 0.08);
+  --text: #eef2ff;
+  --muted: #9aa6c3;
+  --up: #3dffb0;
+  --down: #ff4d6d;
+  --slow: #ffc857;
+  --retry: #7aa2ff;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(61, 255, 176, 0.08), transparent 50%),
+    radial-gradient(900px 400px at 100% 0%, rgba(122, 162, 255, 0.1), transparent 45%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}

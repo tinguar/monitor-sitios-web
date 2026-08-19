@@ -1,0 +1,16 @@
+{
+  "name": "monitor-sitios-web",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/vue": "^5.1.1",
+    "astro": "^5.14.0",
+    "vue": "^3.5.21"
+  }
+}
