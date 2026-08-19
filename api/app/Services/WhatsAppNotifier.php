@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Site;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class WhatsAppNotifier
@@ -135,23 +136,40 @@ class WhatsAppNotifier
         );
     }
 
-    /** @param  array<string, mixed>  $presented */
-    public function notifyDigestSite(Site $site, array $presented): bool
+    /** @return array{ok: bool, error: ?string} */
+    public function notifyDigestSite(Site $site, array $presented): array
     {
         $to = $this->e164For($site);
         if (! $to) {
-            return false;
+            return ['ok' => false, 'error' => 'Sin número de WhatsApp'];
+        }
+
+        if (! $this->cloud->isConfigured()) {
+            return ['ok' => false, 'error' => 'WhatsApp no está configurado'];
         }
 
         $name = (string) ($presented['name'] ?? $site->name);
         $url = (string) ($presented['url'] ?? $site->url);
         $phrase = CheckMessage::digestPhrase((string) ($presented['status'] ?? 'unknown'));
 
-        return $this->sendNamed(
-            $to,
-            (string) config('services.whatsapp.template_digest', 'monitor_resumen'),
-            [$name, $phrase, $url],
-        );
+        try {
+            $this->cloud->sendTemplate(
+                $to,
+                (string) config('services.whatsapp.template_digest', 'monitor_resumen'),
+                (string) config('services.whatsapp.template_language', 'es'),
+                [$name, $phrase, $url],
+            );
+
+            return ['ok' => true, 'error' => null];
+        } catch (Throwable $e) {
+            Log::warning('WhatsApp resumen falló', [
+                'site' => $name,
+                'to' => $to,
+                'error' => $e->getMessage(),
+            ]);
+
+            return ['ok' => false, 'error' => $e->getMessage()];
+        }
     }
 
     /** @param  list<string>  $bodyParams */
@@ -171,6 +189,11 @@ class WhatsAppNotifier
 
             return true;
         } catch (Throwable $e) {
+            Log::warning('WhatsApp no envió plantilla', [
+                'template' => $template,
+                'to' => $to,
+                'error' => $e->getMessage(),
+            ]);
             report($e);
 
             return false;

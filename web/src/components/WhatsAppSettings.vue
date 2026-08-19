@@ -22,6 +22,9 @@
         </label>
         <div class="actions">
           <button type="submit" :disabled="saving">Guardar</button>
+          <button type="button" class="ghost" :disabled="digesting" @click="sendDigestNow">
+            {{ digesting ? 'Enviando…' : 'Enviar resumen ahora' }}
+          </button>
         </div>
       </form>
       <p v-if="notice" class="notice">{{ notice }}</p>
@@ -37,6 +40,7 @@ const open = ref(false);
 const failThreshold = ref(3);
 const digestEnabled = ref(true);
 const saving = ref(false);
+const digesting = ref(false);
 const notice = ref('');
 
 onMounted(load);
@@ -69,6 +73,23 @@ async function save() {
     notice.value = err.message;
   } finally {
     saving.value = false;
+  }
+}
+
+async function sendDigestNow() {
+  digesting.value = true;
+  notice.value = '';
+  try {
+    const response = await apiFetch('/api/whatsapp/digest', { method: 'POST' });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || data.error || 'No se pudo enviar el resumen');
+    const errors = (data.errors || []).join(' · ');
+    notice.value = `Resumen: ${data.sent || 0} enviados, ${data.failed || 0} fallidos, ${data.skipped || 0} sin número.`
+      + (errors ? ` ${errors}` : '');
+  } catch (err) {
+    notice.value = err.message;
+  } finally {
+    digesting.value = false;
   }
 }
 </script>
@@ -150,6 +171,14 @@ button[type='submit'] {
   border-radius: 10px;
   padding: 10px 14px;
   font-weight: 700;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
 }
 
 .notice {

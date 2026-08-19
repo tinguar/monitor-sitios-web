@@ -32,4 +32,6 @@ Route::middleware(\App\Http\Middleware\AuthenticateApiToken::class)->group(funct
 
     Route::post('/whatsapp/test', [WhatsAppTestController::class, 'send'])
         ->middleware('throttle:whatsapp-test');
+    Route::post('/whatsapp/digest', [WhatsAppTestController::class, 'digestAll'])
+        ->middleware('throttle:whatsapp-test');
 });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Setting;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -10,5 +11,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command('sites:check')->everyMinute();
 Schedule::command('sites:digest')
-    ->cron('0 0,6,12,18 * * *')
-    ->timezone('America/Guayaquil');
+    ->everyMinute()
+    ->when(fn () => Setting::digestEnabled() && Setting::isDigestHour() && ! Setting::digestSlotAlreadySent());

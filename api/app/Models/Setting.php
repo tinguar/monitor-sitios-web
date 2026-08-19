@@ -84,4 +84,31 @@ class Setting extends Model
 
         return in_array(strtolower($raw), ['1', 'true', 'yes', 'on'], true);
     }
+
+    public static function digestHours(): array
+    {
+        return [0, 6, 12, 18];
+    }
+
+    public static function isDigestHour(): bool
+    {
+        $hour = (int) now(config('app.timezone'))->format('G');
+
+        return in_array($hour, static::digestHours(), true);
+    }
+
+    public static function currentDigestSlot(): string
+    {
+        return now(config('app.timezone'))->format('Y-m-d-H');
+    }
+
+    public static function digestSlotAlreadySent(): bool
+    {
+        return static::getValue('last_digest_slot') === static::currentDigestSlot();
+    }
+
+    public static function markDigestSlotSent(): void
+    {
+        static::setValue('last_digest_slot', static::currentDigestSlot());
+    }
 }

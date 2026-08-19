@@ -209,6 +209,7 @@ class MonitorApiTest extends TestCase
 
         $result = app(\App\Services\SiteMonitor::class)->sendDigests();
         $this->assertSame(2, $result['sent']);
+        $this->assertSame(0, $result['failed']);
 
         Http::assertSentCount(2);
         Http::assertSent(function ($request) {

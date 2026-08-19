@@ -158,29 +158,57 @@ class SiteMonitor
     }
 
     /**
-     * @return array{sent: int, recipients: int}
+     * @return array{sent: int, recipients: int, failed: int, skipped: int, errors: list<string>}
      */
     public function sendDigests(): array
     {
         $sent = 0;
+        $failed = 0;
+        $skipped = 0;
         $recipients = [];
+        $errors = [];
 
         foreach (Site::query()->orderBy('name')->get() as $site) {
             $presented = $this->present($site);
             $to = $presented['whatsapp_e164'] ?: $this->notifier->e164For($site);
             if (! $to) {
+                $skipped++;
+                $errors[] = $site->name.': sin número de WhatsApp';
+
                 continue;
             }
 
-            if ($this->notifier->notifyDigestSite($site, $presented)) {
+            $result = $this->notifier->notifyDigestSite($site, $presented);
+            if ($result['ok']) {
                 $sent++;
                 $recipients[$to] = true;
+            } else {
+                $failed++;
+                $errors[] = $site->name.': '.($result['error'] ?? 'falló el envío');
             }
         }
 
         return [
             'sent' => $sent,
             'recipients' => count($recipients),
+            'failed' => $failed,
+            'skipped' => $skipped,
+            'errors' => $errors,
         ];
+    }
+
+    /**
+     * @return array{sent: int, recipients: int, failed: int, skipped: int, errors: list<string>}|null
+     */
+    public function maybeSendScheduledDigests(): ?array
+    {
+        if (! Setting::digestEnabled() || ! Setting::isDigestHour() || Setting::digestSlotAlreadySent()) {
+            return null;
+        }
+
+        $result = $this->sendDigests();
+        Setting::markDigestSlotSent();
+
+        return $result;
     }
 }

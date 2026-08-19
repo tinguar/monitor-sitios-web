@@ -10,6 +10,12 @@ class CheckController extends Controller
 {
     public function run(SiteMonitor $monitor): JsonResponse
     {
-        return response()->json($monitor->runChecks());
+        $payload = $monitor->runChecks();
+        $digest = $monitor->maybeSendScheduledDigests();
+        if ($digest !== null) {
+            $payload['digest'] = $digest;
+        }
+
+        return response()->json($payload);
     }
 }

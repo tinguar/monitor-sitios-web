@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\SiteMonitor;
 use App\Services\WhatsAppNotifier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,5 +37,16 @@ class WhatsAppTestController extends Controller
             'to' => $notifier->normalizePhone($countryCode, $phone),
             'template' => $kind,
         ]);
+    }
+
+    public function digestAll(SiteMonitor $monitor): JsonResponse
+    {
+        $monitor->runChecks();
+        $result = $monitor->sendDigests();
+
+        return response()->json(array_merge(
+            ['ok' => $result['failed'] === 0 && $result['sent'] > 0],
+            $result,
+        ));
     }
 }
