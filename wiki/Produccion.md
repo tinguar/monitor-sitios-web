@@ -6,15 +6,15 @@ Ejemplo:
 
 | Rol | Dominio | Document root |
 |-----|---------|----------------|
-| API | `https://api-run-test.tinguar.com` | `api/public` |
-| Panel | `https://web-run-test.tinguar.com` | `web/dist` |
+| API | `https://api.tudominio.com` | `api/public` |
+| Panel | `https://panel.tudominio.com` | `web/dist` |
 
 ## Panel
 
 En `web/.env.production`:
 
 ```
-PUBLIC_API_BASE=https://api-run-test.tinguar.com
+PUBLIC_API_BASE=https://api.tudominio.com
 ```
 
 ```bash
@@ -32,8 +32,8 @@ No subas el `.env` de tu computador. Crea uno en el servidor:
 ```
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://api-run-test.tinguar.com
-CORS_ALLOWED_ORIGINS=https://web-run-test.tinguar.com
+APP_URL=https://api.tudominio.com
+CORS_ALLOWED_ORIGINS=https://panel.tudominio.com
 ```
 
 Más MySQL del hosting, `APP_KEY`, token de WhatsApp, `ADMIN_EMAIL` y `ADMIN_PASSWORD`.

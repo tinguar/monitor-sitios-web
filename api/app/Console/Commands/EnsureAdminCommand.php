@@ -31,7 +31,7 @@ class EnsureAdminCommand extends Command
 
         if ($email === '' || $password === '') {
             $this->error('En el .env del servidor (junto a artisan) deben existir:');
-            $this->line('ADMIN_EMAIL=administracion@tinguar.com');
+            $this->line('ADMIN_EMAIL=admin@example.com');
             $this->line('ADMIN_PASSWORD="tu-clave"');
             $this->line('Luego: php artisan config:clear && php artisan admin:ensure && php artisan config:cache');
 

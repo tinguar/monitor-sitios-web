@@ -3,7 +3,6 @@
 !.env.example
 !api/.env.example
 !web/.env.example
-!web/.env.production
 
 api/.env
 api/.env.backup

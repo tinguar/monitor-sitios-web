@@ -88,15 +88,15 @@ php api/artisan sites:check
 
 ## Producción
 
-Panel y API en **subdominios distintos**:
+Panel y API suelen ir en **subdominios distintos**:
 
-- **API:** `https://api-run-test.tinguar.com` → document root `api/public`
-- **Panel:** `https://web-run-test.tinguar.com` → document root `web/dist`
+- **API:** `https://api.tudominio.com` → document root `api/public`
+- **Panel:** `https://panel.tudominio.com` → document root `web/dist`
 
 El build del panel usa `web/.env.production`:
 
 ```
-PUBLIC_API_BASE=https://api-run-test.tinguar.com
+PUBLIC_API_BASE=https://api.tudominio.com
 ```
 
 En `api/.env` del servidor:
@@ -104,8 +104,8 @@ En `api/.env` del servidor:
 ```
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://api-run-test.tinguar.com
-CORS_ALLOWED_ORIGINS=https://web-run-test.tinguar.com
+APP_URL=https://api.tudominio.com
+CORS_ALLOWED_ORIGINS=https://panel.tudominio.com
 ```
 
 En el servidor (API):

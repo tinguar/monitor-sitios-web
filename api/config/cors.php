@@ -23,7 +23,7 @@ return [
         'trim',
         explode(',', (string) env(
             'CORS_ALLOWED_ORIGINS',
-            'http://localhost:4321,http://127.0.0.1:4321,https://web-run-test.tinguar.com'
+            'http://localhost:4321,http://127.0.0.1:4321'
         ))
     )))),
 
