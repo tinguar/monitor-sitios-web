@@ -2,6 +2,8 @@
 
 Panel para ver si tus sitios web están activos o desconectados.
 
+**Licencia:** MIT. Uso libre: puedes copiarlo, modificarlo, venderlo o hacer lo que quieras, con tal de conservar el aviso de copyright.
+
 - **Laravel**: API, chequeos HTTP y scheduler
 - **WhatsApp Cloud API**: aviso con plantillas cuando un sitio cae o vuelve
 - **Astro + Vue**: dashboard con componentes
